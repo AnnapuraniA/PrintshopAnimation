@@ -43,7 +43,8 @@ export const PrintingScene3DEnhanced = () => {
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight - 72);
+    const canvasHeight = window.innerHeight - 72 - 60; // Subtract header (72px) and footer (60px)
+    renderer.setSize(window.innerWidth, canvasHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     containerRef.current.appendChild(renderer.domElement);
@@ -214,34 +215,28 @@ export const PrintingScene3DEnhanced = () => {
     smile.visible = false;
     customerGroup.add(smile);
 
-    // Arms
-    const armGeometry = new THREE.CapsuleGeometry(0.08, 0.5, 4, 8);
+    // Hair
+    const hairGeometry = new THREE.SphereGeometry(0.28, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+    const hairMaterial = new THREE.MeshStandardMaterial({ color: 0x3a2a1a });
+    const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+    hair.position.y = 2.05;
+    customerGroup.add(hair);
+
+    // Arms (single unified arm with hand at end)
+    const armGeometry = new THREE.CapsuleGeometry(0.08, 0.6, 4, 8);
     const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
     
     const leftArm = new THREE.Mesh(armGeometry, armMaterial);
-    leftArm.position.set(-0.4, 1.2, 0);
-    leftArm.rotation.z = Math.PI / 6;
+    leftArm.position.set(-0.38, 1.0, 0);
+    leftArm.rotation.z = Math.PI / 8;
     leftArm.castShadow = true;
     customerGroup.add(leftArm);
 
     const rightArm = new THREE.Mesh(armGeometry, armMaterial);
-    rightArm.position.set(0.4, 1.2, 0);
-    rightArm.rotation.z = -Math.PI / 6;
+    rightArm.position.set(0.38, 1.0, 0);
+    rightArm.rotation.z = -Math.PI / 8;
     rightArm.castShadow = true;
     customerGroup.add(rightArm);
-
-    // Hands
-    const handGeometry = new THREE.SphereGeometry(0.1, 12, 12);
-    
-    const leftHand = new THREE.Mesh(handGeometry, armMaterial);
-    leftHand.position.set(-0.55, 0.9, 0);
-    leftHand.castShadow = true;
-    customerGroup.add(leftHand);
-
-    const rightHand = new THREE.Mesh(handGeometry, armMaterial);
-    rightHand.position.set(0.55, 0.9, 0);
-    rightHand.castShadow = true;
-    customerGroup.add(rightHand);
 
     // Legs
     const legGeometry2 = new THREE.CylinderGeometry(0.12, 0.12, 0.7);
@@ -316,29 +311,18 @@ export const PrintingScene3DEnhanced = () => {
     mustache.position.set(0, 1.85, 0.23);
     craftsmanGroup.add(mustache);
 
-    // Arms
+    // Arms (unified with hands at end)
     const craftsmanLeftArm = new THREE.Mesh(armGeometry, armMaterial);
-    craftsmanLeftArm.position.set(-0.4, 1.2, 0);
-    craftsmanLeftArm.rotation.z = Math.PI / 6;
+    craftsmanLeftArm.position.set(-0.38, 1.0, 0);
+    craftsmanLeftArm.rotation.z = Math.PI / 8;
     craftsmanLeftArm.castShadow = true;
     craftsmanGroup.add(craftsmanLeftArm);
 
     const craftsmanRightArm = new THREE.Mesh(armGeometry, armMaterial);
-    craftsmanRightArm.position.set(0.4, 1.2, 0);
-    craftsmanRightArm.rotation.z = -Math.PI / 6;
+    craftsmanRightArm.position.set(0.38, 1.0, 0);
+    craftsmanRightArm.rotation.z = -Math.PI / 8;
     craftsmanRightArm.castShadow = true;
     craftsmanGroup.add(craftsmanRightArm);
-
-    // Hands
-    const craftsmanLeftHand = new THREE.Mesh(handGeometry, armMaterial);
-    craftsmanLeftHand.position.set(-0.55, 0.9, 0);
-    craftsmanLeftHand.castShadow = true;
-    craftsmanGroup.add(craftsmanLeftHand);
-
-    const craftsmanRightHand = new THREE.Mesh(handGeometry, armMaterial);
-    craftsmanRightHand.position.set(0.55, 0.9, 0);
-    craftsmanRightHand.castShadow = true;
-    craftsmanGroup.add(craftsmanRightHand);
 
     // Legs
     const craftsmanLeftLeg = new THREE.Mesh(legGeometry2, pantsMaterial);
@@ -749,9 +733,10 @@ export const PrintingScene3DEnhanced = () => {
 
     // Handle resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / (window.innerHeight - 72);
+      const newCanvasHeight = window.innerHeight - 72 - 60; // Subtract header and footer
+      camera.aspect = window.innerWidth / newCanvasHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight - 72);
+      renderer.setSize(window.innerWidth, newCanvasHeight);
     };
     window.addEventListener('resize', handleResize);
 
@@ -764,7 +749,7 @@ export const PrintingScene3DEnhanced = () => {
   }, [isMobile]);
 
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-b from-[hsl(28,30%,18%)] to-[hsl(28,35%,15%)]">
+    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-[hsl(28,30%,18%)] to-[hsl(28,35%,15%)]">
       {/* Background glow effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
@@ -787,7 +772,7 @@ export const PrintingScene3DEnhanced = () => {
       <div 
         ref={containerRef} 
         className="w-full" 
-        style={{ height: 'calc(100vh - 72px)' }}
+        style={{ height: 'calc(100vh - 132px)' }} /* 72px header + 60px footer */
       />
 
       {/* Sound Toggle Button */}

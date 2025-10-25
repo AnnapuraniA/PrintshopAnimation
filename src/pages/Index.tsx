@@ -16,7 +16,7 @@ const Index = () => {
   return (
     <>
       {isLoading && <LoadingIntro onComplete={handleLoadingComplete} />}
-      <div className="relative">
+      <div className="relative h-screen overflow-hidden">
         {/* Header is visible during zoom transition */}
         <Header />
         {/* Scene content fades in after loading */}
