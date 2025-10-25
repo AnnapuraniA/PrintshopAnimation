@@ -43,7 +43,7 @@ export const PrintingScene3DEnhanced = () => {
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    const canvasHeight = window.innerHeight - 72 - 60; // Subtract header (72px) and footer (60px)
+    const canvasHeight = window.innerHeight - 72 - 80; // Subtract header (72px) and footer (80px for better visibility)
     renderer.setSize(window.innerWidth, canvasHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -82,28 +82,83 @@ export const PrintingScene3DEnhanced = () => {
 
     // === WORKSHOP ENVIRONMENT ===
     
-    // Floor
+    // Floor (wooden planks look)
     const floorGeometry = new THREE.PlaneGeometry(20, 20);
     const floorMaterial = new THREE.MeshStandardMaterial({
-      color: 0x3a2f26,
-      roughness: 0.8,
-      metalness: 0.2,
+      color: 0x5a4a35, // Warmer wood color
+      roughness: 0.9,
+      metalness: 0.0,
     });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // Back Wall
-    const wallGeometry = new THREE.BoxGeometry(20, 5, 0.2);
+    // Floor planks detail (lines to simulate wood planks)
+    for (let i = -10; i <= 10; i += 2) {
+      const plankLineGeometry = new THREE.PlaneGeometry(0.05, 20);
+      const plankLineMaterial = new THREE.MeshBasicMaterial({ color: 0x4a3a25, transparent: true, opacity: 0.3 });
+      const plankLine = new THREE.Mesh(plankLineGeometry, plankLineMaterial);
+      plankLine.rotation.x = -Math.PI / 2;
+      plankLine.position.set(i, 0.01, 0);
+      scene.add(plankLine);
+    }
+
+    // Back Wall (brick texture look)
+    const wallGeometry = new THREE.BoxGeometry(20, 5, 0.3);
     const wallMaterial = new THREE.MeshStandardMaterial({
-      color: 0x4a3f35,
-      roughness: 0.9,
+      color: 0x6b5d52, // Lighter brown for contrast
+      roughness: 1.0,
     });
     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
     wall.position.set(0, 2.5, -5);
     wall.receiveShadow = true;
     scene.add(wall);
+
+    // Wall shelves with items
+    for (let i = 0; i < 3; i++) {
+      const shelfGroup = new THREE.Group();
+      
+      // Shelf board
+      const shelfGeometry = new THREE.BoxGeometry(2, 0.05, 0.3);
+      const shelfMaterial = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8 });
+      const shelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
+      shelfGroup.add(shelf);
+
+      // Items on shelf (small boxes)
+      for (let j = 0; j < 3; j++) {
+        const boxGeometry = new THREE.BoxGeometry(0.3, 0.25, 0.2);
+        const boxMaterial = new THREE.MeshStandardMaterial({ 
+          color: [0x8b4513, 0x654321, 0xa0522d][j],
+          roughness: 0.7,
+        });
+        const box = new THREE.Mesh(boxGeometry, boxMaterial);
+        box.position.set(-0.7 + j * 0.7, 0.15, 0);
+        box.castShadow = true;
+        shelfGroup.add(box);
+      }
+
+      shelfGroup.position.set(-3 + i * 3, 2 + i * 0.8, -4.85);
+      scene.add(shelfGroup);
+    }
+
+    // Tool rack on wall
+    const toolRackGeometry = new THREE.BoxGeometry(1.5, 0.1, 0.05);
+    const toolRackMaterial = new THREE.MeshStandardMaterial({ color: 0x3a3a3a });
+    const toolRack = new THREE.Mesh(toolRackGeometry, toolRackMaterial);
+    toolRack.position.set(3.5, 2, -4.9);
+    scene.add(toolRack);
+
+    // Tools hanging on rack
+    const toolColors = [0xff4444, 0x4444ff, 0x44ff44];
+    for (let i = 0; i < 3; i++) {
+      const toolGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.4);
+      const toolMaterial = new THREE.MeshStandardMaterial({ color: toolColors[i], metalness: 0.7 });
+      const tool = new THREE.Mesh(toolGeometry, toolMaterial);
+      tool.position.set(3 + i * 0.5, 1.7, -4.88);
+      tool.castShadow = true;
+      scene.add(tool);
+    }
 
     // Hanging Lamps
     for (let i = -1; i <= 1; i++) {
@@ -267,15 +322,41 @@ export const PrintingScene3DEnhanced = () => {
     craftsmanBody.castShadow = true;
     craftsmanGroup.add(craftsmanBody);
 
-    // Apron
+    // Apron (more defined with straps and pocket)
     const apronGeometry = new THREE.PlaneGeometry(0.5, 0.7);
     const apronMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xdddddd,
+      color: 0xe8e8e8,
+      roughness: 0.7,
       side: THREE.DoubleSide,
     });
     const apron = new THREE.Mesh(apronGeometry, apronMaterial);
     apron.position.set(0, 1.1, 0.31);
+    apron.castShadow = true;
     craftsmanGroup.add(apron);
+
+    // Apron pocket
+    const pocketGeometry = new THREE.PlaneGeometry(0.25, 0.15);
+    const pocketMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xcccccc,
+      roughness: 0.8,
+    });
+    const pocket = new THREE.Mesh(pocketGeometry, pocketMaterial);
+    pocket.position.set(0, 0.85, 0.32);
+    craftsmanGroup.add(pocket);
+
+    // Apron straps
+    const strapGeometry = new THREE.BoxGeometry(0.05, 0.4, 0.02);
+    const strapMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
+    
+    const leftStrap = new THREE.Mesh(strapGeometry, strapMaterial);
+    leftStrap.position.set(-0.15, 1.55, 0.3);
+    leftStrap.rotation.z = -0.1;
+    craftsmanGroup.add(leftStrap);
+
+    const rightStrap = new THREE.Mesh(strapGeometry, strapMaterial);
+    rightStrap.position.set(0.15, 1.55, 0.3);
+    rightStrap.rotation.z = 0.1;
+    craftsmanGroup.add(rightStrap);
 
     // Head
     const craftsmanHead = new THREE.Mesh(headGeometry, skinMaterial);
@@ -402,23 +483,40 @@ export const PrintingScene3DEnhanced = () => {
       cup: new THREE.Group(),
     };
 
-    // Bottle
-    const bottleBodyGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.5, 16);
+    // Bottle (more detailed with label)
+    const bottleBodyGeometry = new THREE.CylinderGeometry(0.15, 0.18, 0.5, 20);
     const bottleNeckGeometry = new THREE.CylinderGeometry(0.06, 0.08, 0.15, 16);
     const bottleCapGeometry = new THREE.CylinderGeometry(0.07, 0.07, 0.05, 16);
     
-    const bottleMaterial = new THREE.MeshStandardMaterial({ 
+    const bottleMaterial = new THREE.MeshPhysicalMaterial({ 
       color: 0xffffff,
       transparent: true,
-      opacity: 0.9,
-      roughness: 0.2,
+      opacity: 0.85,
+      roughness: 0.1,
+      metalness: 0.1,
+      transmission: 0.3, // Glass-like
+      thickness: 0.5,
     });
-    const bottleCapMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const bottleCapMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0x333333,
+      roughness: 0.4,
+      metalness: 0.6,
+    });
     
     const bottleBody = new THREE.Mesh(bottleBodyGeometry, bottleMaterial);
     bottleBody.position.y = 0.25;
     bottleBody.castShadow = true;
     objectsData.bottle.add(bottleBody);
+    
+    // Bottle label (plain band)
+    const labelGeometry = new THREE.CylinderGeometry(0.16, 0.17, 0.25, 20);
+    const labelMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xf0f0f0,
+      roughness: 0.9,
+    });
+    const label = new THREE.Mesh(labelGeometry, labelMaterial);
+    label.position.y = 0.25;
+    objectsData.bottle.add(label);
     
     const bottleNeck = new THREE.Mesh(bottleNeckGeometry, bottleMaterial);
     bottleNeck.position.y = 0.58;
@@ -428,13 +526,14 @@ export const PrintingScene3DEnhanced = () => {
     bottleCap.position.y = 0.68;
     objectsData.bottle.add(bottleCap);
 
-    // T-shirt
-    const tshirtBodyGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.1);
-    const tshirtSleeveGeometry = new THREE.BoxGeometry(0.15, 0.25, 0.1);
+    // T-shirt (more defined with collar)
+    const tshirtBodyGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.12);
+    const tshirtSleeveGeometry = new THREE.BoxGeometry(0.15, 0.25, 0.12);
+    const tshirtCollarGeometry = new THREE.TorusGeometry(0.08, 0.02, 8, 16, Math.PI);
     
     const tshirtMaterial = new THREE.MeshStandardMaterial({ 
       color: 0xffffff,
-      roughness: 0.8,
+      roughness: 0.9,
     });
     
     const tshirtBody = new THREE.Mesh(tshirtBodyGeometry, tshirtMaterial);
@@ -442,43 +541,89 @@ export const PrintingScene3DEnhanced = () => {
     tshirtBody.castShadow = true;
     objectsData.tshirt.add(tshirtBody);
     
+    // Collar
+    const collar = new THREE.Mesh(tshirtCollarGeometry, tshirtMaterial);
+    collar.position.set(0, 0.54, 0.06);
+    collar.rotation.x = Math.PI / 2;
+    objectsData.tshirt.add(collar);
+    
     const leftSleeve = new THREE.Mesh(tshirtSleeveGeometry, tshirtMaterial);
     leftSleeve.position.set(-0.325, 0.425, 0);
+    leftSleeve.castShadow = true;
     objectsData.tshirt.add(leftSleeve);
     
     const rightSleeve = new THREE.Mesh(tshirtSleeveGeometry, tshirtMaterial);
     rightSleeve.position.set(0.325, 0.425, 0);
+    rightSleeve.castShadow = true;
     objectsData.tshirt.add(rightSleeve);
 
-    // Pillow
+    // Bottom hem detail
+    const hemGeometry = new THREE.BoxGeometry(0.52, 0.03, 0.12);
+    const hem = new THREE.Mesh(hemGeometry, new THREE.MeshStandardMaterial({ color: 0xeeeeee }));
+    hem.position.y = 0.16;
+    objectsData.tshirt.add(hem);
+
+    // Pillow (more defined with seams)
     const pillowGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.4);
     const pillowMaterial = new THREE.MeshStandardMaterial({ 
       color: 0xffffff,
-      roughness: 0.9,
+      roughness: 1.0,
     });
     const pillow = new THREE.Mesh(pillowGeometry, pillowMaterial);
     pillow.position.y = 0.3;
     pillow.castShadow = true;
+    // Make pillow slightly curved/soft looking
+    pillow.scale.set(1, 0.8, 1);
     objectsData.pillow.add(pillow);
 
-    // Cup
-    const cupGeometry = new THREE.CylinderGeometry(0.12, 0.1, 0.35, 16);
-    const cupHandleGeometry = new THREE.TorusGeometry(0.08, 0.02, 8, 16, Math.PI);
+    // Pillow seam lines
+    const seamGeometry = new THREE.PlaneGeometry(0.52, 0.02);
+    const seamMaterial = new THREE.MeshBasicMaterial({ color: 0xdddddd, transparent: true, opacity: 0.5 });
+    const seamTop = new THREE.Mesh(seamGeometry, seamMaterial);
+    seamTop.position.set(0, 0.38, 0);
+    seamTop.rotation.x = -Math.PI / 2;
+    objectsData.pillow.add(seamTop);
+
+    const seamBottom = new THREE.Mesh(seamGeometry, seamMaterial);
+    seamBottom.position.set(0, 0.22, 0);
+    seamBottom.rotation.x = -Math.PI / 2;
+    objectsData.pillow.add(seamBottom);
+
+    // Cup (more detailed with rim and base)
+    const cupGeometry = new THREE.CylinderGeometry(0.13, 0.1, 0.35, 20);
+    const cupHandleGeometry = new THREE.TorusGeometry(0.08, 0.025, 10, 16, Math.PI);
+    const cupRimGeometry = new THREE.TorusGeometry(0.13, 0.02, 8, 20);
     
-    const cupMaterial = new THREE.MeshStandardMaterial({ 
+    const cupMaterial = new THREE.MeshPhysicalMaterial({ 
       color: 0xffffff,
-      roughness: 0.3,
+      roughness: 0.2,
+      metalness: 0.1,
+      clearcoat: 0.5, // Shiny ceramic look
+      clearcoatRoughness: 0.3,
     });
     
     const cupBody = new THREE.Mesh(cupGeometry, cupMaterial);
     cupBody.position.y = 0.25;
     cupBody.castShadow = true;
     objectsData.cup.add(cupBody);
+
+    // Cup rim
+    const cupRim = new THREE.Mesh(cupRimGeometry, cupMaterial);
+    cupRim.position.y = 0.43;
+    cupRim.rotation.x = Math.PI / 2;
+    objectsData.cup.add(cupRim);
     
     const cupHandle = new THREE.Mesh(cupHandleGeometry, cupMaterial);
-    cupHandle.position.set(0.12, 0.25, 0);
+    cupHandle.position.set(0.14, 0.25, 0);
     cupHandle.rotation.y = -Math.PI / 2;
+    cupHandle.castShadow = true;
     objectsData.cup.add(cupHandle);
+
+    // Cup base
+    const baseGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.03, 20);
+    const base = new THREE.Mesh(baseGeometry, cupMaterial);
+    base.position.y = 0.09;
+    objectsData.cup.add(base);
 
     // Add all objects to scene (initially hidden)
     Object.values(objectsData).forEach(obj => {
@@ -733,7 +878,7 @@ export const PrintingScene3DEnhanced = () => {
 
     // Handle resize
     const handleResize = () => {
-      const newCanvasHeight = window.innerHeight - 72 - 60; // Subtract header and footer
+      const newCanvasHeight = window.innerHeight - 72 - 80; // Subtract header and footer
       camera.aspect = window.innerWidth / newCanvasHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, newCanvasHeight);
@@ -772,7 +917,7 @@ export const PrintingScene3DEnhanced = () => {
       <div 
         ref={containerRef} 
         className="w-full" 
-        style={{ height: 'calc(100vh - 132px)' }} /* 72px header + 60px footer */
+        style={{ height: 'calc(100vh - 152px)' }} /* 72px header + 80px footer */
       />
 
       {/* Sound Toggle Button */}
