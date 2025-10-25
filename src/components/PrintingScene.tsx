@@ -6,8 +6,8 @@ import { Client3D } from "./Client3D";
 import { Craftsman3D } from "./Craftsman3D";
 import { PrintingMachine3D } from "./PrintingMachine3D";
 import { PrintableObject3D } from "./PrintableObject3D";
-import { PrintingParticles } from "./PrintingParticles";
-import { WorkshopEnvironment } from "./WorkshopEnvironment";
+// import { PrintingParticles } from "./PrintingParticles";
+// import { WorkshopEnvironment } from "./WorkshopEnvironment";
 import { Footer } from "./Footer";
 import { soundManager } from "@/utils/soundEffects";
 
@@ -347,8 +347,8 @@ export const PrintingScene = () => {
             />
           )}
 
-          {/* Workshop Environment */}
-          <WorkshopEnvironment />
+          {/* Workshop Environment - Temporarily disabled for debugging */}
+          {/* <WorkshopEnvironment /> */}
 
           {/* Characters */}
           {isClientVisible && (
@@ -386,11 +386,11 @@ export const PrintingScene = () => {
             />
           )}
 
-          {/* Printing Particles */}
-          <PrintingParticles 
+          {/* Printing Particles - Temporarily disabled for debugging */}
+          {/* <PrintingParticles 
             active={isMachineActive} 
             position={[3, 1.0, 0.5]} 
-          />
+          /> */}
 
           {/* Post-Processing Effects - Disabled due to visibility issues */}
           {/* {!isMobile && (
