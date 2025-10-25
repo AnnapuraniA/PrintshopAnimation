@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+// import { Canvas } from "@react-three/fiber";
 import { Volume2, VolumeX } from "lucide-react";
 // import { Client3D } from "./Client3D";
 // import { Craftsman3D } from "./Craftsman3D";
@@ -7,6 +7,7 @@ import { Volume2, VolumeX } from "lucide-react";
 // import { PrintableObject3D } from "./PrintableObject3D";
 // import { PrintingParticles } from "./PrintingParticles";
 // import { WorkshopEnvironment } from "./WorkshopEnvironment";
+import { ThreeTest } from "./ThreeTest";
 import { Footer } from "./Footer";
 import { soundManager } from "@/utils/soundEffects";
 
@@ -272,74 +273,8 @@ export const PrintingScene = () => {
             }}
           />
         </div>
-        {/* 3D Canvas - Ultra Minimal for Testing */}
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={1} />
-          <mesh>
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial color="hotpink" />
-          </mesh>
-          
-          {/* Characters - Temporarily disabled for testing */}
-          {/* {isClientVisible && (
-            <Client3D
-              item={currentItem}
-              position={
-                phase === "client-entering" 
-                  ? "entering" 
-                  : phase === "client-leaving" 
-                  ? "exiting" 
-                  : clientHasObject
-                  ? "waiting"
-                  : "handed-off"
-              }
-              isHappy={isClientHappy}
-              hasObject={clientHasObject}
-              shirtColor={getShirtColor(currentItem)}
-            />
-          )}
-          
-          <Craftsman3D 
-            isWorking={isCraftsmanWorking} 
-            hasObject={craftsmanHasObject}
-          />
-          
-          <PrintingMachine3D isActive={isMachineActive} />
-
-          {/* Printable Object */}
-          {/* {showObject && (
-            <PrintableObject3D
-              type={currentItem}
-              isPrinted={isPrinted}
-              position={objectPosition}
-              scale={0.8}
-            />
-          )} */}
-
-          {/* Printing Particles - Temporarily disabled for debugging */}
-          {/* <PrintingParticles 
-            active={isMachineActive} 
-            position={[3, 1.0, 0.5]} 
-          /> */}
-
-          {/* Post-Processing Effects - Disabled due to visibility issues */}
-          {/* {!isMobile && (
-            <EffectComposer>
-              <Bloom 
-                intensity={0.5} 
-                luminanceThreshold={0.8} 
-                luminanceSmoothing={0.9}
-                mipmapBlur
-              />
-              <Vignette 
-                offset={0.3} 
-                darkness={0.5}
-                eskil={false}
-              />
-              <ColorAverage blendFunction={1} />
-            </EffectComposer>
-          )} */}
-        </Canvas>
+        {/* Testing: Direct Three.js without React Three Fiber */}
+        <ThreeTest />
 
         {/* Sound Toggle Button */}
         <button
