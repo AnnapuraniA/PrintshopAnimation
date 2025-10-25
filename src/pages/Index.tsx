@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { PrintingScene } from "@/components/PrintingScene";
+import { PrintingScene3D } from "@/components/PrintingScene3D";
 import { LoadingIntro } from "@/components/LoadingIntro";
 
 const Index = () => {
@@ -21,7 +21,7 @@ const Index = () => {
         <Header />
         {/* Scene content fades in after loading */}
         <div className={`pt-[72px] transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}>
-          <PrintingScene />
+          <PrintingScene3D />
         </div>
       </div>
     </>
