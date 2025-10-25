@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette, ColorAverage } from "@react-three/postprocessing";
 import { Volume2, VolumeX } from "lucide-react";
 import { Client3D } from "./Client3D";
 import { Craftsman3D } from "./Craftsman3D";
