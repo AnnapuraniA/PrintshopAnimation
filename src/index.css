@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Enhanced Modern Craft Palette */
+    --background: 28 35% 15%;
+    --foreground: 36 55% 95%;
+
+    --card: 28 30% 18%;
+    --card-foreground: 36 55% 95%;
+
+    --popover: 28 30% 18%;
+    --popover-foreground: 36 55% 95%;
+
+    --primary: 25 85% 58%;
+    --primary-foreground: 28 35% 15%;
+
+    --secondary: 195 65% 55%;
+    --secondary-foreground: 28 35% 15%;
+
+    --muted: 28 25% 25%;
+    --muted-foreground: 36 35% 70%;
+
+    --accent: 45 95% 60%;
+    --accent-foreground: 28 35% 15%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 36 55% 95%;
+
+    --border: 28 25% 28%;
+    --input: 28 25% 28%;
+    --ring: 25 85% 58%;
+
+    --radius: 0.75rem;
+
+    /* Enhanced Custom Craft Tokens */
+    --craft-orange: 25 85% 58%;
+    --craft-dark-bg: 28 35% 15%;
+    --craft-warm-wood: 28 40% 35%;
+    --craft-grey: 210 15% 45%;
+    --craft-blue: 195 65% 55%;
+    --craft-yellow: 45 95% 60%;
+    --craft-gold: 40 75% 55%;
+    --craft-copper: 20 60% 50%;
+    
+    /* Enhanced Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(28 35% 15%) 0%, hsl(28 30% 20%) 100%);
+    --gradient-glow: radial-gradient(circle, hsl(25 85% 58% / 0.2) 0%, transparent 70%);
+    --gradient-scene: linear-gradient(180deg, hsl(28 30% 18%) 0%, hsl(28 35% 15%) 100%);
+    
+    /* Enhanced Shadows */
+    --shadow-soft: 0 4px 24px hsl(0 0% 0% / 0.3);
+    --shadow-craft: 0 8px 32px hsl(25 85% 58% / 0.25);
+    --shadow-glow: 0 0 40px hsl(25 85% 58% / 0.4);
+    
+    /* Smooth Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-ease: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
