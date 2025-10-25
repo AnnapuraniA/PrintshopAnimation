@@ -347,11 +347,17 @@ export const PrintingScene = () => {
             />
           )}
 
-          {/* Workshop Environment */}
-          <WorkshopEnvironment />
+          {/* Test: Simple box inside React Three Fiber */}
+          <mesh position={[0, 1, 0]}>
+            <boxGeometry args={[2, 2, 2]} />
+            <meshStandardMaterial color="hotpink" />
+          </mesh>
 
-          {/* Characters */}
-          {isClientVisible && (
+          {/* Workshop Environment - Disabled for testing */}
+          {/* <WorkshopEnvironment /> */}
+
+          {/* Characters - Disabled for testing */}
+          {/* {isClientVisible && (
             <Client3D
               item={currentItem}
               position={
@@ -377,20 +383,20 @@ export const PrintingScene = () => {
           <PrintingMachine3D isActive={isMachineActive} />
 
           {/* Printable Object */}
-          {showObject && (
+          {/* {showObject && (
             <PrintableObject3D
               type={currentItem}
               isPrinted={isPrinted}
               position={objectPosition}
               scale={0.8}
             />
-          )}
+          )} */}
 
-          {/* Printing Particles */}
-          <PrintingParticles 
+          {/* Printing Particles - Disabled for testing */}
+          {/* <PrintingParticles 
             active={isMachineActive} 
             position={[3, 1.0, 0.5]} 
-          />
+          /> */}
         </Canvas>
 
         {/* Sound Toggle Button */}
