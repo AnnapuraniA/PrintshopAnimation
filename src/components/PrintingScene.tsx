@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-// import { Canvas } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Volume2, VolumeX } from "lucide-react";
-// import { Client3D } from "./Client3D";
-// import { Craftsman3D } from "./Craftsman3D";
-// import { PrintingMachine3D } from "./PrintingMachine3D";
-// import { PrintableObject3D } from "./PrintableObject3D";
-// import { PrintingParticles } from "./PrintingParticles";
-// import { WorkshopEnvironment } from "./WorkshopEnvironment";
-import { ThreeTest } from "./ThreeTest";
+import { Client3D } from "./Client3D";
+import { Craftsman3D } from "./Craftsman3D";
+import { PrintingMachine3D } from "./PrintingMachine3D";
+import { PrintableObject3D } from "./PrintableObject3D";
+import { PrintingParticles } from "./PrintingParticles";
+import { WorkshopEnvironment } from "./WorkshopEnvironment";
 import { Footer } from "./Footer";
 import { soundManager } from "@/utils/soundEffects";
 
@@ -273,8 +273,125 @@ export const PrintingScene = () => {
             }}
           />
         </div>
-        {/* Testing: Direct Three.js without React Three Fiber */}
-        <ThreeTest />
+        {/* 3D Canvas */}
+        <Canvas 
+          shadows 
+          className="w-full h-full"
+          gl={{ 
+            antialias: true,
+            powerPreference: isMobile ? "low-power" : "high-performance"
+          }}
+          dpr={isMobile ? [1, 1.5] : [1, 2]}
+        >
+          <PerspectiveCamera 
+            makeDefault 
+            position={isMobile ? [0, 2.5, 10] : [0, 2, 8]} 
+            fov={isMobile ? 60 : 50} 
+          />
+          <OrbitControls 
+            enableZoom={!isMobile}
+            enablePan={false}
+            minPolarAngle={Math.PI / 4}
+            maxPolarAngle={Math.PI / 2}
+            minDistance={5}
+            maxDistance={15}
+            enableDamping
+            dampingFactor={0.05}
+          />
+
+          {/* Fog for depth */}
+          <fog attach="fog" args={['#2d251e', 5, 20]} />
+
+          {/* Enhanced Lighting System */}
+          <ambientLight intensity={0.8} color="#ffffff" />
+          
+          {/* Key light - main illumination */}
+          <directionalLight 
+            position={[8, 10, 5]} 
+            intensity={1.5} 
+            castShadow
+            shadow-mapSize-width={isMobile ? 1024 : 2048}
+            shadow-mapSize-height={isMobile ? 1024 : 2048}
+            shadow-camera-far={50}
+            shadow-camera-left={-10}
+            shadow-camera-right={10}
+            shadow-camera-top={10}
+            shadow-camera-bottom={-10}
+            color="#ffffff"
+          />
+          
+          {/* Fill light - softer, from opposite */}
+          <directionalLight 
+            position={[-5, 8, -3]} 
+            intensity={0.6} 
+            color="#ffa85c"
+          />
+          
+          {/* Rim light - for character separation */}
+          <directionalLight 
+            position={[0, 3, -8]} 
+            intensity={0.4} 
+            color="#ff8c42"
+          />
+          
+          {/* Spotlight on machine during printing */}
+          {isMachineActive && (
+            <spotLight 
+              position={[3, 4, 2]} 
+              intensity={1.5} 
+              angle={0.5}
+              penumbra={0.5}
+              castShadow
+              color="#f4d03f"
+              target-position={[3, 1, 0.5]}
+            />
+          )}
+
+          {/* Workshop Environment */}
+          <WorkshopEnvironment />
+
+          {/* Characters */}
+          {isClientVisible && (
+            <Client3D
+              item={currentItem}
+              position={
+                phase === "client-entering" 
+                  ? "entering" 
+                  : phase === "client-leaving" 
+                  ? "exiting" 
+                  : clientHasObject
+                  ? "waiting"
+                  : "handed-off"
+              }
+              isHappy={isClientHappy}
+              hasObject={clientHasObject}
+              shirtColor={getShirtColor(currentItem)}
+            />
+          )}
+          
+          <Craftsman3D 
+            isWorking={isCraftsmanWorking} 
+            hasObject={craftsmanHasObject}
+          />
+          
+          <PrintingMachine3D isActive={isMachineActive} />
+
+          {/* Printable Object */}
+          {showObject && (
+            <PrintableObject3D
+              type={currentItem}
+              isPrinted={isPrinted}
+              position={objectPosition}
+              scale={0.8}
+            />
+          )}
+
+          {/* Printing Particles */}
+          <PrintingParticles 
+            active={isMachineActive} 
+            position={[3, 1.0, 0.5]} 
+          />
+        </Canvas>
 
         {/* Sound Toggle Button */}
         <button
