@@ -41,10 +41,13 @@ export const PrintingScene3DEnhanced = () => {
     );
     camera.position.set(0, 2, 8);
 
-    // Renderer
+    // Renderer - dynamically calculate available space
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    const canvasHeight = window.innerHeight - 72 - 80; // Subtract header (72px) and footer (80px for better visibility)
-    renderer.setSize(window.innerWidth, canvasHeight);
+    const getAvailableHeight = () => {
+      // Get actual container height instead of calculating
+      return containerRef.current?.clientHeight || window.innerHeight - 200;
+    };
+    renderer.setSize(window.innerWidth, getAvailableHeight());
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     containerRef.current.appendChild(renderer.domElement);
@@ -876,14 +879,17 @@ export const PrintingScene3DEnhanced = () => {
     };
     animate();
 
-    // Handle resize
+    // Handle resize - auto-adjust to screen size
     const handleResize = () => {
-      const newCanvasHeight = window.innerHeight - 72 - 80; // Subtract header and footer
-      camera.aspect = window.innerWidth / newCanvasHeight;
+      const availableHeight = getAvailableHeight();
+      camera.aspect = window.innerWidth / availableHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, newCanvasHeight);
+      renderer.setSize(window.innerWidth, availableHeight);
     };
     window.addEventListener('resize', handleResize);
+    
+    // Initial adjustment after a brief delay to ensure container is sized
+    setTimeout(() => handleResize(), 100);
 
     // Cleanup
     return () => {
@@ -894,7 +900,7 @@ export const PrintingScene3DEnhanced = () => {
   }, [isMobile]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-[hsl(28,30%,18%)] to-[hsl(28,35%,15%)]">
+    <div className="flex flex-col w-full h-full overflow-hidden bg-gradient-to-b from-[hsl(28,30%,18%)] to-[hsl(28,35%,15%)]">
       {/* Background glow effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
@@ -913,11 +919,10 @@ export const PrintingScene3DEnhanced = () => {
         />
       </div>
 
-      {/* 3D Scene Container */}
+      {/* 3D Scene Container - flex-grow to take available space */}
       <div 
         ref={containerRef} 
-        className="w-full" 
-        style={{ height: 'calc(100vh - 152px)' }} /* 72px header + 80px footer */
+        className="w-full flex-1 relative"
       />
 
       {/* Sound Toggle Button */}

@@ -16,11 +16,11 @@ const Index = () => {
   return (
     <>
       {isLoading && <LoadingIntro onComplete={handleLoadingComplete} />}
-      <div className="relative h-screen overflow-hidden">
+      <div className="flex flex-col h-screen overflow-hidden">
         {/* Header is visible during zoom transition */}
         <Header />
-        {/* Scene content fades in after loading */}
-        <div className={`pt-[72px] transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}>
+        {/* Scene content fades in after loading - takes remaining space */}
+        <div className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}>
           <PrintingScene3DEnhanced />
         </div>
       </div>
