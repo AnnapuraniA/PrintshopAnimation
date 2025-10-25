@@ -350,8 +350,14 @@ export const PrintingScene = () => {
           {/* Workshop Environment - Temporarily disabled for debugging */}
           {/* <WorkshopEnvironment /> */}
 
-          {/* Characters */}
-          {isClientVisible && (
+          {/* Test: Simple 3D Box to verify Three.js works */}
+          <mesh position={[0, 1, 0]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="hotpink" />
+          </mesh>
+          
+          {/* Characters - Temporarily disabled for testing */}
+          {/* {isClientVisible && (
             <Client3D
               item={currentItem}
               position={
@@ -377,14 +383,14 @@ export const PrintingScene = () => {
           <PrintingMachine3D isActive={isMachineActive} />
 
           {/* Printable Object */}
-          {showObject && (
+          {/* {showObject && (
             <PrintableObject3D
               type={currentItem}
               isPrinted={isPrinted}
               position={objectPosition}
               scale={0.8}
             />
-          )}
+          )} */}
 
           {/* Printing Particles - Temporarily disabled for debugging */}
           {/* <PrintingParticles 
